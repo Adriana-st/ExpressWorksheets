@@ -9,12 +9,12 @@
     "start": "node build/app.js",
     "dev": "tsx watch src/app.ts",
     "typecheck": "tsc --noEmit"
-
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^18.0.3",
     "express": "^5.2.1"
   },
   "devDependencies": {

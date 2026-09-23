@@ -1,8 +1,8 @@
 import express, {Application, Request, Response} from "express" ;
 import carRoutes from './routes/cars';
+import { env } from "./config/env";
 
-
-const PORT = process.env.PORT || 3000;
+const port = env.port;
 
 const app: Application = express();
 
@@ -38,6 +38,6 @@ app.get('/oranges', async (_req : Request, res: Response) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log("Server is running on port", PORT);
+app.listen(port, () => {
+    console.log("Server is running on port", port);
     });
