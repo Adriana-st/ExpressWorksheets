@@ -1,28 +1,37 @@
 @endpoint = http://localhost:3000/api/v1/cars
 
-###
+
+
+### Get all cars
+GET  {{endpoint}} HTTP/1.1
+content-type: application/json
+
+### Post/create a new car
 POST {{endpoint}} HTTP/1.1
 content-type: application/json
 
 {
-  "test": "post test"
+  "make": "Honda",
+  "model": "Fit"
 }
 
-###
-GET  {{endpoint}} HTTP/1.1
-content-type: application/json
-
-###
-GET  {{endpoint}}/sillycarID HTTP/1.1
+### Get car by ID
+# Replace 'PASTE_MONGO_ID_HERE' with the actual MongoDB ID
+GET  {{endpoint}}/PASTE_MONGO_ID_HERE HTTP/1.1
 content-type: application/json
 
 
-###
-
-DELETE  {{endpoint}}/sillycarID HTTP/1.1
+### Put/update a car by ID
+# Replace 'PASTE_MONGO_ID_HERE' with the actual MongoDB ID
+PUT  {{endpoint}}/6ab3badc7fde30869d188191 HTTP/1.1
 content-type: application/json
 
-###
+{
+  "make": "Toyota",
+  "model": "Camry Hybrid"
+}
 
-PUT  {{endpoint}}/sillycarID HTTP/1.1
+###Delete a car by ID
+# Replace 'PASTE_MONGO_ID_HERE' with the actual MongoDB ID
+DELETE  {{endpoint}}/6ab3baf37fde30869d188192 HTTP/1.1
 content-type: application/json
