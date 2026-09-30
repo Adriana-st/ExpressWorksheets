@@ -3,35 +3,40 @@
 
 
 ### Get all cars
-GET  {{endpoint}} HTTP/1.1
+GET  {{endpoint}} HTTP/3.0
 content-type: application/json
 
-### Post/create a new car
+### Post/create a new car and name this request "postACar"
+# @name postACar
 POST {{endpoint}} HTTP/1.1
 content-type: application/json
+x-api-key: blahblah
 
 {
-  "make": "Honda",
-  "model": "Fit"
+  "make": "Ford",
+  "model": "Mustang"
 }
 
-### Get car by ID
-# Replace 'PASTE_MONGO_ID_HERE' with the actual MongoDB ID
-GET  {{endpoint}}/PASTE_MONGO_ID_HERE HTTP/1.1
+### 2. Capture the _id returned from the postACar request above
+@newCar = {{postACar.response.body._id}}
+
+### Get the newly created car by its captured ID
+GET  {{endpoint}}/{{newCar}} HTTP/1.1
 content-type: application/json
 
 
-### Put/update a car by ID
-# Replace 'PASTE_MONGO_ID_HERE' with the actual MongoDB ID
-PUT  {{endpoint}}/6ab3badc7fde30869d188191 HTTP/1.1
+
+### Update the newly created car using the same captured ID
+PUT  {{endpoint}}/{{newCar}} HTTP/1.1
 content-type: application/json
+x-api-key: blahblah
 
 {
-  "make": "Toyota",
-  "model": "Camry Hybrid"
+  "make": "Ford",
+  "model": "Mustang GT"
 }
 
-###Delete a car by ID
-# Replace 'PASTE_MONGO_ID_HERE' with the actual MongoDB ID
-DELETE  {{endpoint}}/6ab3baf37fde30869d188192 HTTP/1.1
+###Delete the newly created car using the captured ID
+DELETE  {{endpoint}}/{{newCar}} HTTP/1.1
 content-type: application/json
+x-api-key: blahblah
