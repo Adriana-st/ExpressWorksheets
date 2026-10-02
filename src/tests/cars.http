@@ -13,8 +13,9 @@ content-type: application/json
 x-api-key: blahblah
 
 {
-  "make": "Ford",
-  "model": "Mustang"
+  "make": "Mazda",
+  "model": "Miata",
+  "year": 1900
 }
 
 ### 2. Capture the _id returned from the postACar request above
@@ -32,8 +33,9 @@ content-type: application/json
 x-api-key: blahblah
 
 {
-  "make": "Ford",
-  "model": "Mustang GT"
+  "make": "Toyota",
+  "model": "Landcruiser",
+  "year": 2026
 }
 
 ###Delete the newly created car using the captured ID
