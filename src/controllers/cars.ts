@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { CarService } from '../services/cars';
-import { createCarZSchema } from '../models/cars';
+// import { createCarZSchema } from '../models/cars';
 
 const carService = new CarService();
 
@@ -16,6 +16,27 @@ export class CarController {
     }
   };
 
+  /**
+  * @openapi
+  * /cars/{id}:
+  *   get:
+  *     summary: Get a car by ID
+  *     tags:
+  *       - Cars
+  *     parameters:
+  *       - in: path
+  *         name: id
+  *         required: true
+  *         schema:
+  *           type: string
+  *     responses:
+  *       200:
+  *         description: Car found
+  *       404:
+  *         description: Car not found
+  *       500:
+  *         description: Internal server error
+  */
 
   getCarById = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -31,8 +52,29 @@ export class CarController {
     }
   };
 
+   /**
+   * @openapi
+   * /cars:
+   *   post:
+   *     summary: Create a new car
+   *     tags:
+   *       - Cars
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/CreateCarInput'
+   *     responses:
+   *       201:
+   *         description: Successfully created car
+   *       400:
+   *         description: Bad request
+   *       500:
+   *         description: Internal server error
+   */
 
-    createCar = async (req: Request, res: Response): Promise<void> => {
+  createCar = async (req: Request, res: Response): Promise<void> => {
     try {
       // const validation = createCarZSchema.safeParse(req.body);
       // console.log
@@ -51,7 +93,7 @@ export class CarController {
   };
 
 
-    updateCar = async (req: Request, res: Response): Promise<void> => {
+  updateCar = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
       const updatedCar = await carService.updateCar(id, req.body);
@@ -65,6 +107,29 @@ export class CarController {
     }
   };
 
+  /**
+   * @openapi
+   * /cars/{id}:
+   *   delete:
+   *     summary: Delete a car by ID
+   *     tags:
+   *       - Cars
+   *     security:
+   *       - ApiKeyAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Successfully deleted car
+   *       404:
+   *         description: Car not found
+   *       500:
+   *         description: Internal server error
+   */
   deleteCar = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
