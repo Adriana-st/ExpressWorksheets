@@ -14,7 +14,7 @@ app.use('/api/v1/cars', carRoutes);
 
 app.get("/ping", async (_req : Request, res: Response) => {
     res.json({
-    message: "hello from Adriana "
+    message: "hello from Adriana"
     });
 });
 
