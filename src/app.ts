@@ -1,4 +1,5 @@
 import express, {Application, Request, Response} from "express" ;
+import cors from 'cors';
 import carRoutes from './routes/cars';
 import { logger } from "./middleware/logging.middleware";
 import { swaggerSpec } from "./config/swagger";
@@ -6,6 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 
 
 export const app: Application = express();
+app.use(cors());
 app.use(logger);
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
