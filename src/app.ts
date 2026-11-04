@@ -10,6 +10,8 @@ export const app: Application = express();
 app.use(cors());
 app.use(logger);
 app.use(express.json());
+// Special code to add a delay - remove later
+app.use((_req, _res, next) => setTimeout(next, 2000));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1/cars', carRoutes);
 
