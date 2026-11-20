@@ -1,6 +1,6 @@
 import { CarModel, ICar } from '../models/cars'
 import { HydratedDocument } from 'mongoose';
-import { NotFoundError } from '../errors/notFoundError';
+import { NotFoundError } from '../utils/app.errors';
 
 export class CarService {
 
