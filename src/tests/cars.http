@@ -42,3 +42,115 @@ x-api-key: blahblah
 DELETE  {{endpoint}}/{{newCar}} HTTP/1.1
 content-type: application/json
 x-api-key: blahblah
+
+
+# WORKSHEET 8 - ERROR HANDLING TESTS
+
+### W1. POST missing make and model, year too early
+# Expect 400: { success: false, message: "Validation failed", errors: [ make, model, year ] }
+POST {{endpoint}} HTTP/1.1
+content-type: application/json
+
+{
+  "year": 1900
+}
+
+### W2. POST with year as a string
+# Expect 400: errors says year expected number, received string
+POST {{endpoint}} HTTP/1.1
+content-type: application/json
+
+{
+  "make": "Ford",
+  "model": "Focus",
+  "year": "twenty"
+}
+
+### W3. POST a valid car (saves its id for the tests below)
+# Expect 201 with the new car and an _id
+# @name ws8Car
+POST {{endpoint}} HTTP/1.1
+content-type: application/json
+
+{
+  "make": "Ford",
+  "model": "Focus",
+  "year": 2015
+}
+
+###
+@ws8Id = {{ws8Car.response.body._id}}
+
+### W4. GET the car by a valid id
+# Expect 200 with the Ford Focus
+GET {{endpoint}}/{{ws8Id}} HTTP/1.1
+
+### W5. GET with an id that is not a valid ObjectId
+# 400 { success: false, message: "Validation failed", errors: [ ... "Invalid ObjectId" ] }
+GET {{endpoint}}/abc HTTP/1.1
+
+### W6. GET with a valid-looking id that does not exist
+# Expect 404 { error: "NotFoundError", message: "Car not found" }
+GET {{endpoint}}/609c15272a2e382d6c382100 HTTP/1.1
+
+### W7. PUT valid data with api key  (THIS TESTS THE validate FIX after step 8)
+# Expect 200 with model "Fiesta" and year 2016
+PUT {{endpoint}}/{{ws8Id}} HTTP/1.1
+content-type: application/json
+x-api-key: blahblah
+
+{
+  "make": "Ford",
+  "model": "Fiesta",
+  "year": 2016
+}
+
+### W8. PUT with invalid body
+# Expect 400 with Zod errors (model empty)
+PUT {{endpoint}}/{{ws8Id}} HTTP/1.1
+content-type: application/json
+x-api-key: blahblah
+
+{
+  "make": "Ford",
+  "model": ""
+}
+
+### W9. PUT without the api key
+# Expect 401 { status: "fail", message: "Unauthorized: Missing api-key header" }
+PUT {{endpoint}}/{{ws8Id}} HTTP/1.1
+content-type: application/json
+
+{
+  "make": "Ford",
+  "model": "Fiesta"
+}
+
+### W10. PUT with an invalid id
+# 400 "Invalid ObjectId"
+PUT {{endpoint}}/abc HTTP/1.1
+content-type: application/json
+x-api-key: blahblah
+
+{
+  "make": "Ford",
+  "model": "Fiesta"
+}
+
+### W11. DELETE without the api key
+# Expect 401
+DELETE {{endpoint}}/{{ws8Id}} HTTP/1.1
+
+### W12. DELETE the car with the api key
+# Expect 200 with the deleted car
+DELETE {{endpoint}}/{{ws8Id}} HTTP/1.1
+x-api-key: blahblah
+
+### W13. DELETE the same car again
+# Expect 404 { error: "NotFoundError", message: "Car not found" }
+DELETE {{endpoint}}/{{ws8Id}} HTTP/1.1
+x-api-key: blahblah
+
+### W14. GET the deleted car
+# Expect 404 { error: "NotFoundError", message: "Car not found" }
+GET {{endpoint}}/{{ws8Id}} HTTP/1.1

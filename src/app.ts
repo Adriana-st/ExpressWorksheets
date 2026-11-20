@@ -4,7 +4,7 @@ import carRoutes from './routes/cars';
 import { logger } from "./middleware/logging.middleware";
 import { swaggerSpec } from "./config/swagger";
 import swaggerUi from 'swagger-ui-express';
-
+import { errorHandler } from './middleware/error.middleware';
 
 export const app: Application = express();
 app.use(cors());
@@ -37,4 +37,6 @@ app.get('/oranges', async (_req : Request, res: Response) => {
     message: "this is oranges",
     });
 });
+
+app.use(errorHandler);
 

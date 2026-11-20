@@ -40,15 +40,27 @@ export const CarModel = model<ICar>('Car', carSchema);
  */
 
 export const createCarZSchema = z.object({
-  make: z.string().min(1),
-  model: z.string().min(1),
-  year: z.number().min(1950).optional(),
+  body: z.object({
+    make: z.string().min(1),
+    model: z.string().min(1),
+    year: z.number().min(1950).optional(),
+  }),
 });
 
-// export const updateCarZSchema = z.object({
-//   make: z.string().min(1).optional(),
-//   model: z.string().min(1).optional(),
-//   year: z.number().min(1950).optional(),
-// });
+// Shared rule for a MongoDB ObjectId in the URL (:id)
+const objectIdParams = z.object({
+  id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid ObjectId'),
+});
 
-export const updateCarZSchema = createCarZSchema.partial();
+export const updateCarZSchema = z.object({
+  params: objectIdParams,
+  body: z.object({
+    make: z.string().min(1),
+    model: z.string().min(1),
+    year: z.number().min(1950).optional(),
+  }),
+});
+
+export const carParamsSchema = z.object({
+  params: objectIdParams,
+});
