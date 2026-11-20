@@ -1,5 +1,7 @@
 import argon2 from 'argon2';
 import { UserModel } from '../models/users';
+import { mongo } from 'mongoose';  
+import { UserAlreadyExistsError } from '../utils/app.errors';
 
 // Anyone can read a JWT payload, so never put secrets in here
 export interface TokenPayload {
@@ -24,8 +26,17 @@ const hashOptions = {
 export class AuthService {
   async register(name: string, email: string, password: string): Promise<PublicUser> {
     const passwordHash = await argon2.hash(password, hashOptions);
-    const user = await UserModel.create({ name, email, passwordHash });
-    // Built by hand so the hash never leaves the server
-    return { _id: user._id.toString(), name: user.name, email: user.email };
+    try {
+        const user = await UserModel.create({ name, email, passwordHash });
+        // Built by hand so the hash never leaves the server
+        return { _id: user._id.toString(), name: user.name, email: user.email };
+
+    } catch (error) {
+        // 11000 = duplicate key on the unique email index
+        if (error instanceof mongo.MongoServerError && error.code === 11000) {
+            throw new UserAlreadyExistsError();
+        }
+        throw error;
+    }
   }
 }
