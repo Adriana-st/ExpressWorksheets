@@ -67,3 +67,14 @@ Authorization: Bearer {{accessToken}}
 
 ### W8 Me without token – expect 401 "Missing or invalid Authorization header"
 GET {{endpoint}}/auth/me HTTP/1.1
+
+### W9 Delete without token – expect 401
+DELETE {{endpoint}}/cars/REAL_ID_HERE HTTP/1.1
+
+### W10 Delete with token but bad id – expect 400 (auth runs before validation)
+DELETE {{endpoint}}/cars/123 HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+### W11 Delete with token – expect 200
+DELETE {{endpoint}}/cars/REAL_ID_HERE HTTP/1.1
+Authorization: Bearer {{accessToken}}

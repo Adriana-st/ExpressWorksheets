@@ -23,7 +23,23 @@ describe('Cars API Integration Tests (/api/v1/cars)', () => {
     year: 2022
   };
 
-  const apiKey = "blahblah"; // Header required for protected routes (PUT, DELETE)
+  let token: string; // JWT required for DELETE
+
+  // Register a fresh user and log in to get a JWT for the protected routes
+  beforeAll(async () => {
+    const email = `test${Date.now()}@example.com`; // unique each run, avoids 409
+    const password = 'testpassword';
+
+    await request(app)
+      .post('/api/v1/auth/register')
+      .send({ name: 'Test', email, password });
+
+    const res = await request(app)
+      .post('/api/v1/auth/login')
+      .send({ email, password });
+
+    token = res.body.token;
+  });
 
   // 1. GET /api/v1/cars - Public (No API key needed)
   describe('GET /api/v1/cars', () => {
@@ -84,19 +100,19 @@ describe('Cars API Integration Tests (/api/v1/cars)', () => {
     });
   });
 
-  // 4. DELETE /api/v1/cars/:id - Protected (Requires x-api-key)
+  // 4. DELETE /api/v1/cars/:id - Protected (Requires a JWT)
   describe('DELETE /api/v1/cars/:id', () => {
-    it('should return 401 Unauthorized if x-api-key header is missing', async () => {
+    it('should return 401 Unauthorized if no token is sent', async () => {
       const response = await request(app)
         .delete(`/api/v1/cars/${createdCarId}`);
 
       expect(response.status).toBe(401);
     });
 
-    it('should delete the car and return 200 when valid x-api-key is supplied', async () => {
+    it('should delete the car and return 200 when a valid token is supplied', async () => {
       const response = await request(app)
         .delete(`/api/v1/cars/${createdCarId}`)
-        .set('x-api-key', apiKey);
+        .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
     });
