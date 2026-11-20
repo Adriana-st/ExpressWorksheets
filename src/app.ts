@@ -1,6 +1,7 @@
 import express, {Application, Request, Response} from "express" ;
 import cors from 'cors';
 import carRoutes from './routes/cars';
+import authRoutes from './routes/auth';
 import { logger } from "./middleware/logging.middleware";
 import { swaggerSpec } from "./config/swagger";
 import swaggerUi from 'swagger-ui-express';
@@ -12,6 +13,7 @@ app.use(logger);
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1/cars', carRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 
 app.get("/ping", async (_req : Request, res: Response) => {
