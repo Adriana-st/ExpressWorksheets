@@ -29,3 +29,31 @@ content-type: application/json
     "email": "adri3@example.com",
     "password": "123"
 }
+
+### W4 Login – expect 200 { token }   (run W1 first)
+# @name login
+POST {{endpoint}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "adri@example.com",
+    "password": "difficult password"
+}
+
+### W5 Wrong password – expect 401 "Invalid email or password"
+POST {{endpoint}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "adri@example.com",
+    "password": "wrong password"
+}
+
+### W6 Unknown user – expect 401 with the SAME message
+POST {{endpoint}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "nobody@example.com",
+    "password": "difficult password"
+}

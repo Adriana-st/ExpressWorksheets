@@ -32,4 +32,10 @@ export class AuthController {
     const user = await authService.register(name, email, password);
     res.status(201).json(user);
   };
+  
+  login = async (req: Request, res: Response): Promise<void> => {
+    const { email, password } = req.body;
+    const token = await authService.login(email, password);
+    res.status(200).json({ token });
+  };
 }
