@@ -1,0 +1,31 @@
+@endpoint = http://localhost:3000/api/v1
+
+### W1 Register – expect 201, email lowercased, no passwordHash
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Adri",
+    "email": "Adri@Example.com",
+    "password": "difficult password"
+}
+
+### W2 Register bad email – expect 400
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Adri",
+    "email": "not-an-email",
+    "password": "difficult password"
+}
+
+### W3 Register short password – expect 400
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Adri",
+    "email": "adri3@example.com",
+    "password": "123"
+}
