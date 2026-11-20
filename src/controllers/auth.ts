@@ -32,10 +32,52 @@ export class AuthController {
     const user = await authService.register(name, email, password);
     res.status(201).json(user);
   };
-  
+
+  /**
+   * @openapi
+   * /auth/login:
+   *   post:
+   *     summary: Log in and receive a JWT
+   *     tags:
+   *       - Auth
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/LoginInput'
+   *     responses:
+   *       200:
+   *         description: Logged in, returns { token }
+   *       400:
+   *         description: Validation failed
+   *       401:
+   *         description: Invalid credentials
+   *       500:
+   *         description: Internal server error
+   */
   login = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
     const token = await authService.login(email, password);
     res.status(200).json({ token });
+  };
+
+  /**
+   * @openapi
+   * /auth/me:
+   *   get:
+   *     summary: Get the logged-in user
+   *     tags:
+   *       - Auth
+   *     responses:
+   *       200:
+   *         description: The user the token belongs to
+   *       401:
+   *         description: Missing, invalid or expired token
+   */
+  me = async (req: Request, res: Response): Promise<void> => {
+    // req.user was set by authenticateJWT
+    const user = await authService.getUserById(req.user!.sub);
+    res.status(200).json(user);
   };
 }

@@ -36,7 +36,6 @@ export const authenticateJWT = (req: Request, _res: Response, next: NextFunction
   }
   const token = authHeader.split(' ')[1];
   try {
-    // throws if the signature is wrong or the token has expired
     req.user = authService.verifyToken(token);  // throws if the signature is bad or the token expired
     next();
   } catch {

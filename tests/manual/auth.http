@@ -57,3 +57,13 @@ content-type: application/json
     "email": "nobody@example.com",
     "password": "difficult password"
 }
+
+###
+@accessToken = {{login.response.body.token}}
+
+### W7 Me with token – expect 200 + your user   (run W4 first)
+GET {{endpoint}}/auth/me HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+### W8 Me without token – expect 401 "Missing or invalid Authorization header"
+GET {{endpoint}}/auth/me HTTP/1.1
